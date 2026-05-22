@@ -2,8 +2,9 @@ import express from "express";
 import { config } from "dotenv";
 import { connectDB, disconnectDB } from "./config/db.js";
 
-import movieRoutes from "./routes/movieRoute.js";
-import authRoutes from "./routes/authRoute.js";
+import movieRoutes from "./routes/movieRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import watchListRoutes from "./routes/watchListRoutes.js";
 
 config();
 connectDB();
@@ -19,6 +20,7 @@ const PORT = 5001;
 
 app.use("/movies", movieRoutes)
 app.use("/auth", authRoutes)
+app.use("/watchlist", watchListRoutes)
 
 app.get("/", (_, res) => {
     res.json({ message: "Hello, World!" });
