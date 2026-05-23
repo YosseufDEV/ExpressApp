@@ -1,5 +1,32 @@
 import { prisma } from "../config/db.js";
 
+export const getWatchList = async (req, res) => {
+    const { id } = req.params;
+
+    if(!(await prisma.user.findUnique({ where: { id: id } }))) {
+        return res.status(404).json({ message: "User not found" });
+    }
+
+    if(id !== req.user.id) {
+        return res.status(403).json({ message: "Forbidden, Not owned by the user" });
+    }
+
+    const watchListItems = await prisma.watchListItem.findMany({
+        where: { userId: id },
+        include: {
+            movie: true,
+        }
+    });
+
+    res.status(200).json({
+        status: "success",
+        data: {
+            watchListItems
+        }
+    });
+}
+
+
 export const addToWatchList = async (req, res) => {
     const { movieId, status, rating, notes } = req.body;
 
